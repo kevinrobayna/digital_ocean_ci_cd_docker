@@ -42,4 +42,4 @@ jobs:
         run: doctl compute droplet create "ci-cd-do-example" --image docker-18-04 --size s-1vcpu-1gb --region lon1 --user-data-file deploy.sh --wait
 
       - name: Delete Droplet if there's one
-        run: doctl compute droplet delete "ci-cd-do-example"
+        run: doctl compute droplet delete "ci-cd-do-example" --force
