@@ -6,7 +6,7 @@ Example of a simple pipeline that would build a docker image and deploy the cont
 You should be able to build the docker image like this
 
 ```
-docker build -t helloworld -f Dockerfile app
+docker build -t helloworld -f Dockerfile .
 ```
 
 Then you should run the image itself with the following command
