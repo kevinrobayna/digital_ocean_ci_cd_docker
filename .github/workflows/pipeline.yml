@@ -39,7 +39,7 @@ jobs:
           image_path: do-kevinrobayna-docker-registry/helloworld
 
       - name: Get Droplet if there's one
-        run: doctl compute droplet get "ci_cd_do_example" --wait          
+        run: doctl compute droplet get "ci_cd_do_example"
 
       - name: Delete Droplet if there's one
-        run: doctl compute droplet delete "ci_cd_do_example" --wait
+        run: doctl compute droplet delete "ci_cd_do_example"
