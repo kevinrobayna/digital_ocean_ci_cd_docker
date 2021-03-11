@@ -43,3 +43,6 @@ jobs:
 
       - name: Delete Droplet if there's one
         run: doctl compute droplet delete "ci_cd_do_example"
+
+      - name: clean up docker registry
+        run: doctl registry garbage-collection start do-kevinrobayna-docker-registry
