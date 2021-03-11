@@ -27,3 +27,13 @@ jobs:
       # use go cli
       - run: go version
       - run: go build app/*
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+         token: ${{ secrets.DO_API_KEY }}
+
+      - name: Publish Image to Container Registry
+        uses: ripplr-io/docr-docker-publish@v1
+        with:
+          image_path: do-kevinrobayna-docker-registry/helloworld
