@@ -15,7 +15,7 @@ func SayHello(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var response = make(map[string]string)
-    names[`message`] = `Hello world`
+    response[`message`] = `Hello world`
 
 	json.NewEncoder(w).Encode(response)
 }
