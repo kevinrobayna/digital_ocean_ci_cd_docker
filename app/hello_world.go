@@ -1,5 +1,6 @@
 package main
 import (
+	"fmt"
 	"net/http"
 	"encoding/json"
 )
@@ -16,6 +17,8 @@ func SayHello(w http.ResponseWriter, r *http.Request) {
 
 	var response = make(map[string]string)
     response[`message`] = `Hello world`
+
+	fmt.Println("Hello world")
 
 	json.NewEncoder(w).Encode(response)
 }
