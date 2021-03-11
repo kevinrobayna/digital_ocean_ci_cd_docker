@@ -37,3 +37,6 @@ jobs:
         uses: ripplr-io/docr-docker-publish@v1
         with:
           image_path: do-kevinrobayna-docker-registry/helloworld
+
+      - name: Delete Droplet if there's one
+        run: doctl compute droplet delete "ci_cd_do_example" --wait
