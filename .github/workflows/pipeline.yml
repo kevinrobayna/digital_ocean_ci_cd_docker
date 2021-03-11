@@ -38,11 +38,11 @@ jobs:
         with:
           image_path: do-kevinrobayna-docker-registry/helloworld
 
-      - name: Get Droplet if there's one
-        run: doctl compute droplet get "ci_cd_do_example"
+      - name: Provision Droplet and deploy container
+        run: doctl compute droplet create "ci_cd_do_example" --image docker-18-04 --size s-1vcpu-1gb --region lon1 --user-data-file deploy.sh --wait
 
-      - name: Delete Droplet if there's one
-        run: doctl compute droplet delete "ci_cd_do_example"
+      # - name: Delete Droplet if there's one
+      #   run: doctl compute droplet delete "ci_cd_do_example"
 
       - name: clean up docker registry
         run: doctl registry garbage-collection start do-kevinrobayna-docker-registry
