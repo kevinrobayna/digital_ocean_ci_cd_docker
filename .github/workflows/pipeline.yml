@@ -26,3 +26,4 @@ jobs:
       - uses: actions/setup-go@v2
       # use go cli
       - run: go version
+      - run: go build hello_world.go
