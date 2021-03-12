@@ -40,7 +40,7 @@ jobs:
 
       - name: Create ssh key
         run: |
-          keyResponse=$(doctl compute ssh-key create "do_ssh_key" --public-key ${{ secrets.DO_SSH_KEY_PUBLIC }} --format "ID")
+          keyResponse=$(doctl compute ssh-key create "do_ssh_key" --format "ID" --public-key ${{ secrets.DO_SSH_KEY_PUBLIC }})
           keyId=($(echo ${keyResponse//ID/} | tr "\n" " "))
           echo "ssh_key_id=$keyId" >> $GITHUB_ENV
 
