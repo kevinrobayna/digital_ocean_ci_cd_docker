@@ -38,7 +38,7 @@ jobs:
         with:
           image_path: do-kevinrobayna-docker-registry/helloworld
 
-      - name: Create ssh key
+      - name: Create ssh key and store id in env variable
         run: |
           keyResponse=$(doctl compute ssh-key create "do_ssh_key" --public-key "${{ secrets.DO_SSH_KEY_PUBLIC }}" --format "ID")
           keyId=($(echo ${keyResponse//ID/} | tr "\n" " "))
