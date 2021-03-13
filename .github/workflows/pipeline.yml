@@ -29,9 +29,9 @@ jobs:
       - name: Generate deploy file
         run: |
           echo '#!/bin/bash
-echo ${{ secrets.DO_REGISTRY_PASSWORD }} | docker login registry.digitalocean.com -u ${{ secrets.DO_REGISTRY_USERNAME }} --password-stdin
-docker run -d -p 8080:8080 --name helloworld registry.digitalocean.com/do-kevinrobayna-docker-registry/helloworld:latest
-curl localhost:8080/api/hello' > deploy.sh
+          echo ${{ secrets.DO_REGISTRY_PASSWORD }} | docker login registry.digitalocean.com -u ${{ secrets.DO_REGISTRY_USERNAME }} --password-stdin
+          docker run -d -p 8080:8080 --name helloworld registry.digitalocean.com/do-kevinrobayna-docker-registry/helloworld:latest
+          curl localhost:8080/api/hello' > deploy.sh
 
       - name: Provision Droplet and deploy container
         run: | 
