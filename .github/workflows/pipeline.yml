@@ -42,14 +42,13 @@ jobs:
         run: |
           keyResponse=$(doctl compute ssh-key create "do_ssh_key" --public-key "${{ secrets.DO_SSH_KEY_PUBLIC }}" --format "ID")
           keyId=($(echo ${keyResponse//ID/} | tr "\n" " "))
-          echo "ssh_key_id=$keyId" >> $GITHUB_ENV
+          echo "DO_KEY_ID=$keyId" >> $GITHUB_ENV
 
       - name: Provision Droplet and deploy container
         run: | 
-          dropletResponse=$(doctl compute droplet create "ci-cd-do-example" --image docker-18-04 --size s-1vcpu-1gb --region lon1 --ssh-keys "${{ env.ssh_key_id }}" --format "Public IPv4" --wait)
+          dropletResponse=$(doctl compute droplet create "ci-cd-do-example" --image docker-18-04 --size s-1vcpu-1gb --region lon1 --ssh-keys "${{ env.DO_KEY_ID }}" --format "Public IPv4" --wait)
           host=($(echo ${dropletResponse//Public IPv4/} | tr "\n" " "))
-          echo "DO_HOST=$do_host" >> $GITHUB_ENV
-          echo $DO_HOST
+          echo "DO_HOST=$host" >> $GITHUB_ENV
 
       - name: Run 
         uses: appleboy/ssh-action@master
@@ -73,4 +72,4 @@ jobs:
         run: doctl compute droplet delete "ci-cd-do-example" --force
 
       - name: Delete SSH key so that nothing can access the machine
-        run: doctl compute ssh-key delete "${{ env.ssh_key_id }}" --force
+        run: doctl compute ssh-key delete "${{ env.DO_KEY_ID }}" --force
