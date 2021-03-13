@@ -60,7 +60,7 @@ jobs:
           DO_REGISTRY_PASSWORD: "${{ secrets.DO_REGISTRY_PASSWORD }}"
         with:
           host: ${{ env.DO_HOST }}
-          username: root
+          username: ${{ secrets.DO_SSH_USER }}
           key: ${{ secrets.DO_SSH_KEY_PRIVATE }}
           envs: DO_REGISTRY_USERNAME,DO_REGISTRY_PASSWORD
           script: |
