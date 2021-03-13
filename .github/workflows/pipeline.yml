@@ -50,8 +50,8 @@ jobs:
           host=($(echo ${dropletResponse//Public IPv4/} | tr "\n" " "))
           echo "DO_HOST=$host" >> $GITHUB_ENV
 
-      - name: Ping host from outside
-        run: ping $DO_HOST
+      - name: Ping host once
+        run: ping $DO_HOST -o
 
       - name: Run 
         uses: appleboy/ssh-action@master
