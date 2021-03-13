@@ -51,7 +51,7 @@ jobs:
           echo "DO_HOST=$host" >> $GITHUB_ENV
 
       - name: Ping host 5 times
-        run: ping $DO_HOST -c 5
+        run: ping $DO_HOST -c 5 -i 5
 
       - name: Run 
         uses: appleboy/ssh-action@master
