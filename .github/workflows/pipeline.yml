@@ -38,38 +38,20 @@ jobs:
         with:
           image_path: do-kevinrobayna-docker-registry/helloworld
 
-      - name: Create ssh key and store id in env variable
-        run: |
-          keyResponse=$(doctl compute ssh-key create "do_ssh_key" --public-key "${{ secrets.DO_SSH_KEY_PUBLIC }}" --format "ID")
-          keyId=($(echo ${keyResponse//ID/} | tr "\n" " "))
-          echo "DO_KEY_ID=$keyId" >> $GITHUB_ENV
-
       - name: Provision Droplet and deploy container
         run: | 
-          dropletResponse=$(doctl compute droplet create "ci-cd-do-example" --image docker-18-04 --size s-1vcpu-1gb --region lon1 --ssh-keys "${{ env.DO_KEY_ID }}" --format "Public IPv4" --wait)
+          $user_data = <<<EOD
+          #!/bin/bash
+          echo "${{ secrets.DO_REGISTRY_PASSWORD }}" | docker login registry.digitalocean.com -u "${{ secrets.DO_REGISTRY_USERNAME }}" --password-stdin
+          docker run -d -p 8080:8080 --name helloworld registry.digitalocean.com/do-kevinrobayna-docker-registry/helloworld:latest
+          curl localhost:8080/api/hello
+          EOD;
+          dropletResponse=$(doctl compute droplet create "ci-cd-do-example" --image docker-18-04 --size s-1vcpu-1gb --region lon1 --user_data $user_data --format "Public IPv4" --wait)
           host=($(echo ${dropletResponse//Public IPv4/} | tr "\n" " "))
           echo "DO_HOST=$host" >> $GITHUB_ENV
-
-      - name: Run 
-        uses: appleboy/ssh-action@master
-        env:
-          DO_REGISTRY_USERNAME: "${{ secrets.DO_REGISTRY_USERNAME }}"
-          DO_REGISTRY_PASSWORD: "${{ secrets.DO_REGISTRY_PASSWORD }}"
-        with:
-          host: ${{ env.DO_HOST }}
-          username: ${{ secrets.DO_SSH_USER }}
-          key: ${{ secrets.DO_SSH_KEY_PRIVATE }}
-          envs: DO_REGISTRY_USERNAME,DO_REGISTRY_PASSWORD
-          script: |
-            echo $DO_REGISTRY_PASSWORD | docker login registry.digitalocean.com -u $DO_REGISTRY_USERNAME --password-stdin
-            docker run -d -p 80:8080 --name helloworld registry.digitalocean.com/do-kevinrobayna-docker-registry/helloworld:latest
-            curl localhost:80/api/hello
       
       - name: Curl from outside of droplet
-        run: curl ${{ env.DO_HOST }}/api/hello
+        run: curl ${{ env.DO_HOST }}:8080/api/hello
 
-      - name: Delete Droplet if there's one
-        run: doctl compute droplet delete "ci-cd-do-example" --force
-
-      - name: Delete SSH key so that nothing can access the machine
-        run: doctl compute ssh-key delete "${{ env.DO_KEY_ID }}" --force
+      # - name: Delete Droplet if there's one
+      #   run: doctl compute droplet delete "ci-cd-do-example" --force
